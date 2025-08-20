@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Credit/Debit Card Validator</title>
+
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: linear-gradient(135deg, #cf0059 0%, #00f0f3 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    
+    .container {
+      background: white;
+      padding: 35px 30px 30px 30px;
+      border-radius: 18px;
+      box-shadow: 0 8px 32px rgba(44, 62, 80, 0.18);
+      text-align: center;
+      width: 350px;
+      animation: pop-in 0.7s cubic-bezier(.68,-0.55,.27,1.55);
+    }
+    @keyframes pop-in {
+      0% { transform: scale(0.8) translateY(40px); opacity: 0; }
+      100% { transform: scale(1) translateY(0); opacity: 1; }
+    }
+    h2 {
+      margin-bottom: 22px;
+      color: #007BFF;
+      letter-spacing: 1px;
+      font-weight: 600;
+    }
+    input {
+      width: 92%;
+      padding: 12px;
+      font-size: 17px;
+      margin-bottom: 18px;
+      border-radius: 8px;
+      border: 1.5px solid #e0e0e0;
+      box-shadow: 0 2px 8px rgba(44, 62, 80, 0.04);
+      transition: border 0.2s, box-shadow 0.2s;
+      outline: none;
+    }
+    input:focus {
+      border: 1.5px solid #007BFF;
+      box-shadow: 0 2px 12px rgba(0,123,255,0.10);
+      background: #f7fbff;
+    }
+    button {
+      padding: 12px 28px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      background: linear-gradient(90deg, #007BFF 60%, #00c6ff 100%);
+      color: white;
+      cursor: pointer;
+      font-weight: 500;
+      box-shadow: 0 2px 8px rgba(0,123,255,0.08);
+      transition: background 0.2s, transform 0.1s;
+    }
+    button:hover {
+      background: linear-gradient(90deg, #0056b3 60%, #007BFF 100%);
+      transform: translateY(-2px) scale(1.03);
+    }
+    .result {
+      margin-top: 20px;
+      font-size: 19px;
+      font-weight: bold;
+      padding: 12px 0;
+      border-radius: 7px;
+      min-height: 32px;
+      transition: background 0.3s, color 0.3s;
+    }
+    .valid {
+      color: #1bc47d;
+      background: #eafaf3;
+      border: 1px solid #b6f0d3;
+    }
+    .invalid {
+      color: #e74c3c;
+      background: #fff0f0;
+      border: 1px solid #ffd6d6;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Card Number Validator</h2>
+    <input type="text" id="cardNumber" placeholder="Enter card number">
+    <br>
+    <button onclick="validateCard()">Check</button>
+    <div class="result" id="result"></div>
+  </div>
+
+  <script>
+    function luhnCheck(num) {
+      let arr = num.split('').reverse().map(x => parseInt(x));
+      let sum = 0;
+
+      for (let i = 0; i < arr.length; i++) {
+        let digit = arr[i];
+        if (i % 2 !== 0) { // Double every second digit
+          digit *= 2;
+          if (digit > 9) digit -= 9;
+        }
+        sum += digit;
+      }
+      return sum % 10 === 0;
+    }
+
+    function validateCard() {
+      const cardNumber = document.getElementById("cardNumber").value.replace(/\s+/g, '');
+      const resultDiv = document.getElementById("result");
+
+      if (!/^\d+$/.test(cardNumber)) {
+        resultDiv.innerHTML = "⚠️ Please enter digits only.";
+        resultDiv.className = "result invalid";
+        return;
+      }
+
+      if (luhnCheck(cardNumber)) {
+        resultDiv.innerHTML = "✅ Valid Card Number";
+        resultDiv.className = "result valid";
+      } else {
+        resultDiv.innerHTML = "❌ Invalid Card Number";
+        resultDiv.className = "result invalid";
+      }
+    }
+  </script>
+</body>
+</html>
